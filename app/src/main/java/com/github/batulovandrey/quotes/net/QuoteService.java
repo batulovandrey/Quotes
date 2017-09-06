@@ -16,7 +16,12 @@ import retrofit2.http.Query;
 public interface QuoteService {
 
     @Headers("X-Mashape-Key: 3eH3ER7RlbmshgOtLgeZ2Jsg0Wm8p1iIxaIjsngr7Gf4Ge0d3h")
-    @GET
+    @GET("/")
     Call<List<Quote>> getQuotesList(@Query("cat") @Categories.Category String cat,
+                                    @Query("count") int count);
+
+    @Headers("X-Mashape-Key: 3eH3ER7RlbmshgOtLgeZ2Jsg0Wm8p1iIxaIjsngr7Gf4Ge0d3h")
+    @GET("/")
+    Call<Quote> getQuote(@Query("cat") @Categories.Category String cat,
                                     @Query("count") int count);
 }

@@ -25,4 +25,9 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         tools:text="author"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/white"/>
+
 </LinearLayout>

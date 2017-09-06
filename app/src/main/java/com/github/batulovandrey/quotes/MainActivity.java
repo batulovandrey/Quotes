@@ -13,7 +13,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
+import com.github.batulovandrey.quotes.adapter.QuotesPagerAdapter;
+import com.github.batulovandrey.quotes.bean.Quote;
 import com.github.batulovandrey.quotes.utils.Utils;
 
 public class MainActivity extends AppCompatActivity implements
@@ -23,11 +26,13 @@ public class MainActivity extends AppCompatActivity implements
     private Toolbar mToolbar;
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
+    private QuotesPagerAdapter mPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mPagerAdapter = new QuotesPagerAdapter(getSupportFragmentManager());
         initUI();
     }
 
@@ -48,8 +53,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onQuoteServerClick(int position) {
-        // TODO: 04.09.2017 save to realm
+    public void onQuoteServerClick(Quote quote) {
+        Toast.makeText(getApplicationContext(), "quote is " + quote.getQuote(), Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -70,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void initViewPager() {
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
-//        mViewPager.setAdapter(mAdapter);
+        mViewPager.setAdapter(mPagerAdapter);
     }
 
     private void initTabLayout() {
