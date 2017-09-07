@@ -26,7 +26,7 @@ public class QuoteViewHolder extends RecyclerView.ViewHolder implements View.OnC
 
     @Override
     public void onClick(View v) {
-        mListener.onQuoteClick(getLayoutPosition());
+        mListener.onQuoteClick(v, getLayoutPosition());
     }
 
     public void setQuoteTextViewValue(String text) {

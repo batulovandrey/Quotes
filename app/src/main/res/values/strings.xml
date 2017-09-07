@@ -7,4 +7,11 @@
     <string name="choose_categories">Choose category of quotes</string>
     <string name="ok">OK</string>
     <string name="error">something went wrong</string>
+    <string name="yes">Yes</string>
+    <string name="add_quote">Add quote to fav?</string>
+    <string name="remove_quote">Remove quote from fav?</string>
+    <string name="exit_app">Exit application</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="pull_to_refresh">pull to refresh</string>
+    <string name="no">No</string>
 </resources>

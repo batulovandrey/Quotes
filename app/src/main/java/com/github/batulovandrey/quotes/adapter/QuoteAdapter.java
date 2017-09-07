@@ -26,7 +26,7 @@ public class QuoteAdapter extends RecyclerView.Adapter<QuoteViewHolder> {
 
     @Override
     public QuoteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.quote_item, null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.quote_item, parent, false);
         return new QuoteViewHolder(view, mListener);
     }
 
@@ -39,6 +39,6 @@ public class QuoteAdapter extends RecyclerView.Adapter<QuoteViewHolder> {
 
     @Override
     public int getItemCount() {
-        return mQuotes.size();
+        return mQuotes != null ? mQuotes.size() : 0;
     }
 }

@@ -20,6 +20,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.github.batulovandrey.quotes.R.*;
 import static com.github.batulovandrey.quotes.net.Categories.FAMOUS;
 import static com.github.batulovandrey.quotes.net.Categories.MOVIES;
 
@@ -30,8 +31,6 @@ import static com.github.batulovandrey.quotes.net.Categories.MOVIES;
 public class QuotesServerFragment extends BasicFragment implements QuotesClickListener {
 
     private OnQuoteServerClickListener mClickListener;
-    private List<Quote> mQuotes;
-    private QuoteAdapter mAdapter;
     private QuoteService mService;
 
     public static QuotesServerFragment newInstance() {
@@ -74,11 +73,13 @@ public class QuotesServerFragment extends BasicFragment implements QuotesClickLi
     }
 
     @Override
-    public void onQuoteClick(int position) {
+    public void onQuoteClick(View view, int position) {
         if (mClickListener != null) {
-            mClickListener.onQuoteServerClick(mQuotes.get(position));
+            mClickListener.onQuoteServerClick(view, mQuotes.get(position));
         }
     }
+
+    // region private methods
 
     private void getDataFromServer() {
         String category = Utils.readIsFamousChecked(getActivity()) ? FAMOUS : MOVIES;
@@ -99,13 +100,13 @@ public class QuotesServerFragment extends BasicFragment implements QuotesClickLi
                 Quote quote = response.body();
                 if (quote != null) {
                     mQuotes = Collections.singletonList(quote);
-                    fillAdapter();
+                    showData();
                 }
             }
 
             @Override
             public void onFailure(Call<Quote> call, Throwable t) {
-                handleFailure();
+                handleFailure(t);
             }
         });
     }
@@ -118,20 +119,24 @@ public class QuotesServerFragment extends BasicFragment implements QuotesClickLi
                 List<Quote> responseList = response.body();
                 if (responseList != null && !responseList.isEmpty()) {
                     mQuotes = responseList;
-                    fillAdapter();
+                    showData();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Quote>> call, Throwable t) {
-                handleFailure();
+                handleFailure(t);
             }
         });
     }
 
-    private void handleFailure() {
+    private void handleFailure(Throwable t) {
         onStopRefreshing();
-        Toast.makeText(getContext(), R.string.error, Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), string.error + t.getMessage(), Toast.LENGTH_LONG).show();
+    }
+
+    private void showData() {
+        fillAdapter();
     }
 
     private void fillAdapter() {
@@ -143,7 +148,9 @@ public class QuotesServerFragment extends BasicFragment implements QuotesClickLi
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
+    // endregion private methods
+
     public interface OnQuoteServerClickListener {
-        void onQuoteServerClick(Quote quote);
+        void onQuoteServerClick(View view, Quote quote);
     }
 }
