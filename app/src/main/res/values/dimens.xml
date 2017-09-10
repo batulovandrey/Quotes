@@ -2,4 +2,6 @@
 <resources>
     <dimen name="padding_small">8dp</dimen>
     <dimen name="divider_height">1dp</dimen>
+    <dimen name="widget_min_width">300dp</dimen>
+    <dimen name="widget_min_height">100dp</dimen>
 </resources>
