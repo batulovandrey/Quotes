@@ -3,6 +3,8 @@ package com.github.batulovandrey.quotes.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 /**
  * @author Andrey Batulov on 04/09/2017
@@ -15,6 +17,29 @@ public class Utils {
 
     private Utils() {
         throw new IllegalStateException("can't create object");
+    }
+
+    /**
+     * Method to check network accessibility
+     *
+     * @param context Context
+     * @return true if there is connection, false otherwise
+     */
+    public static boolean hasConnection(Context context) {
+        boolean isConnected = false;
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
+                .getState() == NetworkInfo.State.CONNECTED ||
+                cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+                        .getState() == NetworkInfo.State.CONNECTED) {
+            isConnected = true;
+        }
+        return isConnected;
+    }
+
+    public static int getRandomNumber(int min, int max) {
+        return min + (int) (Math.random() * (max - min));
     }
 
     public static void writeQuotesCount(Activity activity, String quotesCount) {

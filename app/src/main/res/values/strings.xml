@@ -6,7 +6,6 @@
     <string name="quotes_count_hint">please, input number of quotes (1 – 10)</string>
     <string name="choose_categories">Choose category of quotes</string>
     <string name="ok">OK</string>
-    <string name="error">something went wrong</string>
     <string name="yes">Yes</string>
     <string name="add_quote">Add quote to fav?</string>
     <string name="remove_quote">Remove quote from fav?</string>
@@ -15,4 +14,6 @@
     <string name="pull_to_refresh">pull to refresh</string>
     <string name="no">No</string>
     <string name="widget_label">Quote Widget</string>
+    <string name="error_data">error getting the data</string>
+    <string name="no_connection">No connection</string>
 </resources>

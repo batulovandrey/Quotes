@@ -13,7 +13,11 @@ import com.github.batulovandrey.quotes.bean.Quote;
 import com.github.batulovandrey.quotes.net.ApiClient;
 import com.github.batulovandrey.quotes.net.Categories;
 import com.github.batulovandrey.quotes.net.QuoteService;
+import com.github.batulovandrey.quotes.utils.Utils;
 
+import java.util.List;
+
+import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,7 +32,7 @@ import static android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_IDS;
 public class QuoteWidgetProvider extends AppWidgetProvider {
 
     @Override
-    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+    public void onUpdate(final Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         Intent intent = new Intent(context, QuoteWidgetProvider.class);
         intent.setAction(ACTION_APPWIDGET_UPDATE);
         intent.putExtra(EXTRA_APPWIDGET_IDS, appWidgetIds);
@@ -42,24 +46,35 @@ public class QuoteWidgetProvider extends AppWidgetProvider {
         final ComponentName componentName = new ComponentName(context, QuoteWidgetProvider.class);
         manager.updateAppWidget(componentName, views);
 
-        QuoteService service = ApiClient.getClient().create(QuoteService.class);
-        Call<Quote> call = service.getQuote(Categories.FAMOUS, 1);
-        call.enqueue(new Callback<Quote>() {
-            @Override
-            public void onResponse(Call<Quote> call, Response<Quote> response) {
-                Quote quote = response.body();
-                if (quote != null) {
-                    views.setTextViewText(R.id.quote_text_view, quote.getQuote());
-                    views.setTextViewText(R.id.author_text_view, quote.getAuthor());
+        Realm realm = Realm.getInstance(context);
+        List<Quote> quotes = realm.allObjects(Quote.class);
+
+        if (Utils.hasConnection(context)) {
+            QuoteService service = ApiClient.getClient().create(QuoteService.class);
+            Call<Quote> call = service.getQuote(Categories.FAMOUS, 1);
+            call.enqueue(new Callback<Quote>() {
+                @Override
+                public void onResponse(Call<Quote> call, Response<Quote> response) {
+                    Quote quote = response.body();
+                    if (quote != null) {
+                        views.setTextViewText(R.id.quote_text_view, quote.getQuote());
+                        views.setTextViewText(R.id.author_text_view, quote.getAuthor());
+                        manager.updateAppWidget(componentName, views);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Quote> call, Throwable t) {
+                    views.setTextViewText(R.id.quote_text_view, context.getString(R.string.error_data));
                     manager.updateAppWidget(componentName, views);
                 }
-            }
-
-            @Override
-            public void onFailure(Call<Quote> call, Throwable t) {
-                views.setTextViewText(R.id.quote_text_view, "Error");
-            }
-        });
+            });
+        } else if (quotes != null && !quotes.isEmpty()) {
+            Quote quote = quotes.get(Utils.getRandomNumber(0, quotes.size()));
+            views.setTextViewText(R.id.quote_text_view, quote.getQuote());
+            views.setTextViewText(R.id.author_text_view, quote.getAuthor());
+            manager.updateAppWidget(componentName, views);
+        }
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 }

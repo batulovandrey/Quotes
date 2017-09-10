@@ -3,6 +3,7 @@ package com.github.batulovandrey.quotes;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.view.View;
 import android.widget.Toast;
 
@@ -84,11 +85,14 @@ public class QuotesServerFragment extends BasicFragment implements QuotesClickLi
     private void getDataFromServer() {
         String category = Utils.readIsFamousChecked(getActivity()) ? FAMOUS : MOVIES;
         int count = Utils.readQuotesCount(getActivity());
-
-        if (count == 1) {
-            getOneQuote(category);
+        if (Utils.hasConnection(getContext())) {
+            if (count == 1) {
+                getOneQuote(category);
+            } else {
+                getQuotes(category, count);
+            }
         } else {
-            getQuotes(category, count);
+            handleFailure(string.no_connection);
         }
     }
 
@@ -106,7 +110,7 @@ public class QuotesServerFragment extends BasicFragment implements QuotesClickLi
 
             @Override
             public void onFailure(Call<Quote> call, Throwable t) {
-                handleFailure(t);
+                handleFailure(string.error_data);
             }
         });
     }
@@ -125,14 +129,14 @@ public class QuotesServerFragment extends BasicFragment implements QuotesClickLi
 
             @Override
             public void onFailure(Call<List<Quote>> call, Throwable t) {
-                handleFailure(t);
+                handleFailure(string.error_data);
             }
         });
     }
 
-    private void handleFailure(Throwable t) {
+    private void handleFailure(@StringRes int message) {
         onStopRefreshing();
-        Toast.makeText(getContext(), string.error + t.getMessage(), Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 
     private void showData() {
