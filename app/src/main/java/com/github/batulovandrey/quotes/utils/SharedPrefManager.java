@@ -10,13 +10,15 @@ import android.net.NetworkInfo;
  * @author Andrey Batulov on 04/09/2017
  */
 
-public class Utils {
+public class SharedPrefManager {
 
     private static final String QUOTES_COUNT = "quotes_count";
     private static final String IS_FAMOUS_CHECKED = "is_famous_checked";
 
-    private Utils() {
-        throw new IllegalStateException("can't create object");
+    private SharedPreferences mSharedPreferences;
+
+    public SharedPrefManager(SharedPreferences sharedPreferences) {
+        mSharedPreferences = sharedPreferences;
     }
 
     /**
@@ -25,7 +27,7 @@ public class Utils {
      * @param context Context
      * @return true if there is connection, false otherwise
      */
-    public static boolean hasConnection(Context context) {
+    public boolean hasConnection(Context context) {
         boolean isConnected = false;
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -38,11 +40,11 @@ public class Utils {
         return isConnected;
     }
 
-    public static int getRandomNumber(int min, int max) {
+    public int getRandomNumber(int min, int max) {
         return min + (int) (Math.random() * (max - min));
     }
 
-    public static void writeQuotesCount(Activity activity, String quotesCount) {
+    public void writeQuotesCount(String quotesCount) {
         int count;
         if (quotesCount == null || quotesCount.equals("0"))
             count = 1;
@@ -54,30 +56,28 @@ public class Utils {
         else if (count > 10)
             count = 10;
 
-        SharedPreferences.Editor editor = getEditor(activity);
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putInt(QUOTES_COUNT, count);
         editor.apply();
     }
 
-    public static int readQuotesCount(Activity activity) {
-        SharedPreferences preferences = activity.getPreferences(Context.MODE_PRIVATE);
+    public int readQuotesCount() {
         int defaultValue = 10;
-        return preferences.getInt(QUOTES_COUNT, defaultValue);
+        return mSharedPreferences.getInt(QUOTES_COUNT, defaultValue);
     }
 
-    public static void writeIsFamousChecked(Activity activity, boolean isChecked) {
-        SharedPreferences.Editor editor = getEditor(activity);
+    public void writeIsFamousChecked(boolean isChecked) {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putBoolean(IS_FAMOUS_CHECKED, isChecked);
         editor.apply();
     }
 
-    public static boolean readIsFamousChecked(Activity activity) {
-        SharedPreferences preferences = activity.getPreferences(Context.MODE_PRIVATE);
+    public boolean readIsFamousChecked() {
         boolean defaultValue = true;
-        return preferences.getBoolean(IS_FAMOUS_CHECKED, defaultValue);
+        return mSharedPreferences.getBoolean(IS_FAMOUS_CHECKED, defaultValue);
     }
 
-    private static SharedPreferences.Editor getEditor(Activity activity) {
+    private SharedPreferences.Editor getEditor(Activity activity) {
         SharedPreferences preferences = activity.getPreferences(Context.MODE_PRIVATE);
         return preferences.edit();
     }
