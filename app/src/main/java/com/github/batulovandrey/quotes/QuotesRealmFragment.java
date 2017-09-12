@@ -41,6 +41,13 @@ public class QuotesRealmFragment extends BasicFragment implements QuotesClickLis
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser)
+            fillAdapter();
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         fillAdapter();
@@ -71,7 +78,7 @@ public class QuotesRealmFragment extends BasicFragment implements QuotesClickLis
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
-    private void fillAdapter() {
+    public void fillAdapter() {
         mQuotes = getQuoteList();
         mAdapter = new QuoteAdapter(mQuotes, this);
         mRecyclerView.setAdapter(mAdapter);

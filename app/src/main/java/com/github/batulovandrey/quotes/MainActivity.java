@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -105,7 +106,6 @@ public class MainActivity extends AppCompatActivity implements
                     @Override
                     public void onClick(View v) {
                         removeQuoteFromFav(quote);
-                        showMessagePullToRefresh();
                     }
                 }).show();
     }
@@ -174,6 +174,9 @@ public class MainActivity extends AppCompatActivity implements
                         .equalTo("quote", quote.getQuote())
                         .findFirst();
                 quote1.removeFromRealm();
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.view_pager);
+                if (fragment instanceof QuotesRealmFragment)
+                    ((QuotesRealmFragment) fragment).fillAdapter();
             }
         });
     }
